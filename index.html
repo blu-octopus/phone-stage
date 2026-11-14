@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101013">
+  <title>Phone Stage</title>
+  <meta name="description" content="Drop a design, get a spinning 3D phone mockup as MP4, GIF, WebM or PNG. Runs entirely in your browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand__mark" aria-hidden="true"></span>Phone Stage</div>
+    <div class="topbar__file" id="fileLabel">No design yet · drop a file anywhere</div>
+    <a class="topbar__link" href="https://github.com/blu-octopus" target="_blank" rel="noopener">made by blu-octopus ↗</a>
+  </header>
+
+  <main class="app">
+    <aside class="panel" aria-label="settings">
+      <section class="group">
+        <h2>Design</h2>
+        <label class="drop" id="dropButton">
+          <input type="file" id="fileInput" hidden>
+          <span class="drop__icon" aria-hidden="true">↑</span>
+          <span><b>Choose a file</b> or drop it anywhere</span>
+          <small>PNG · JPG · GIF · WebP · SVG · MP4 · WebM · MOV · or paste</small>
+        </label>
+        <p class="note" id="mediaNote" hidden></p>
+        <div class="field">
+          <span class="field__label">Fit</span>
+          <div class="segmented" id="fit">
+            <button data-value="cover">Fill</button>
+            <button data-value="contain">Fit</button>
+          </div>
+        </div>
+        <div class="field" id="screenFillField">
+          <span class="field__label">Screen color</span>
+          <input type="color" id="screenFill" value="#000000">
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Phone</h2>
+        <div class="swatches" id="finish"></div>
+        <div class="field">
+          <span class="field__label">Size</span>
+          <input type="range" id="zoom" min="0.6" max="1.5" step="0.01">
+        </div>
+        <label class="toggle"><input type="checkbox" id="island"> Camera island</label>
+        <label class="toggle"><input type="checkbox" id="shadow"> Floor shadow</label>
+      </section>
+
+      <section class="group">
+        <h2>Motion</h2>
+        <div class="motions" id="motion"></div>
+        <div class="field">
+          <span class="field__label">Amount</span>
+          <input type="range" id="amount" min="0" max="1.5" step="0.01">
+        </div>
+        <div class="field">
+          <span class="field__label">Loop</span>
+          <input type="range" id="duration" min="1" max="15" step="0.5">
+          <output id="durationValue"></output>
+        </div>
+        <button class="link-button" id="matchMedia" hidden>Match the video/GIF length</button>
+      </section>
+
+      <section class="group">
+        <h2>Background</h2>
+        <div class="swatches" id="background"></div>
+        <div class="field" id="customColorField">
+          <span class="field__label">Color</span>
+          <input type="color" id="customColor" value="#f4f1ff">
+        </div>
+        <p class="note" id="bgNote" hidden>No background works with PNG and WebM. MP4 and GIF will use black.</p>
+      </section>
+
+      <section class="group">
+        <h2>Export</h2>
+        <div class="field field--stack">
+          <span class="field__label">Shape</span>
+          <div class="segmented segmented--4" id="aspect">
+            <button data-value="16:9" title="Landscape: X / YouTube">16:9</button>
+            <button data-value="1:1" title="Square">1:1</button>
+            <button data-value="4:5" title="Portrait: Instagram feed">4:5</button>
+            <button data-value="9:16" title="Story / Reels / TikTok">9:16</button>
+          </div>
+        </div>
+        <div class="field field--stack">
+          <span class="field__label">Format</span>
+          <div class="segmented segmented--4" id="format">
+            <button data-value="mp4">MP4</button>
+            <button data-value="gif">GIF</button>
+            <button data-value="webm">WebM</button>
+            <button data-value="png">PNG</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field__label">Quality</span>
+          <div class="segmented" id="quality">
+            <button data-value="0.5">Small</button>
+            <button data-value="0.75">Medium</button>
+            <button data-value="1">Full</button>
+          </div>
+        </div>
+        <div class="field" id="fpsField">
+          <span class="field__label">FPS</span>
+          <div class="segmented" id="fps"></div>
+        </div>
+        <p class="note" id="outputInfo"></p>
+        <button class="export" id="exportButton">Export</button>
+      </section>
+    </aside>
+
+    <section class="viewport">
+      <div class="stage-frame" id="stageFrame">
+        <canvas id="view" aria-label="3D phone preview"></canvas>
+      </div>
+      <div class="transport">
+        <button class="icon-button" id="play" aria-label="pause">❚❚</button>
+        <input type="range" id="scrub" min="0" max="1" step="0.001" value="0" aria-label="timeline">
+        <output id="clock">0.0s</output>
+      </div>
+    </section>
+  </main>
+
+  <div class="drop-overlay" id="dropOverlay" hidden><div>Drop to put it on the phone</div></div>
+
+  <dialog class="progress" id="progress">
+    <h3 id="progressTitle">Exporting…</h3>
+    <div class="bar"><div class="bar__fill" id="progressFill"></div></div>
+    <p id="progressDetail">Starting…</p>
+    <div class="progress__actions">
+      <button class="secondary" id="cancelExport">Cancel</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

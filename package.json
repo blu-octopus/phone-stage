@@ -1,0 +1,10 @@
+{
+  "name": "phone-stage",
+  "version": "0.1.0",
+  "description": "Drop a design onto a 3D phone and export a spinning mockup as MP4, GIF, WebM or PNG, entirely in the browser.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "python3 -m http.server 8080"
+  }
+}
