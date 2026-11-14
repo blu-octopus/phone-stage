@@ -4,6 +4,8 @@ Drop a design onto a 3D phone, pick a motion, and export it as an **MP4, GIF, We
 
 Everything runs in your browser. Your files never leave your computer.
 
+**▶ Use it: https://blu-octopus.github.io/phone-stage/**
+
 ## What you can drop in
 
 | Type | Formats | Notes |
