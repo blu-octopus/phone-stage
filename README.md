@@ -91,4 +91,8 @@ There's also a small scripting hook for batch jobs and tests: `await window.phon
 - [Inter](https://rsms.me/inter/) by Rasmus Andersson (SIL Open Font License)
 - Grew out of the promo-clip stage in [DOUGHNUT3D](https://github.com/blu-octopus/terminal-donut)
 
+## License
+
+[MIT](LICENSE) — use it, change it, ship it. Attribution appreciated, not required.
+
 Made by [blu-octopus](https://github.com/blu-octopus), built with [Claude Code](https://claude.com/claude-code).
